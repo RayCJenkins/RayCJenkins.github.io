@@ -58,11 +58,6 @@
       throw new WorkerException('Worker error.')
     }
 
-    // Hint! This is where you should post messages to the web worker and
-    // receive messages from the web worker.
-
-    toggleButtonsAbledness();
-    return ctx.putImageData(imageData, 0, 0);
   };
 
   function revertImage() {
