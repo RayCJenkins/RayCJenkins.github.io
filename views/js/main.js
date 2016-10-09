@@ -511,7 +511,6 @@ function updatePositions() {
   phases[4] = 100 * Math.sin(scrollTop + 4);
 
   var items = document.getElementsByClassName('mover');
-
   for (var i = 0; i < items.length; i++) {
     items[i].style.left = items[i].basicLeft + phases[i % 5] + 'px';
   }
