@@ -502,7 +502,7 @@ function updatePositions() {
   window.performance.mark("mark_start_frame");
 
   //Pre Calculations
-  var phases[];
+  var phases = [];
   var scrollTop = (document.body.scrollTop / 1250);
   phases[0] = 100 * Math.sin(scrollTop + 0);
   phases[1] = 100 * Math.sin(scrollTop + 1);
