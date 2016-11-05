@@ -57,6 +57,8 @@ var Location = function(data, index) {
 var ViewModel = function() {
 	var self = this;
 
+	this.isYelpVisible = ko.observable(false);
+
 	this.Locations = ko.observableArray([]);
 
 	interestingLocations.forEach(function(locationItem, index) {
@@ -77,8 +79,12 @@ var ViewModel = function() {
 		};
     }, this);
     this.clickMapMarker = function(clickedLocation) {
-    	fillInfoWindowAndToggleMarker(markers[clickedLocation.markerIndex()]);
-    	// toggleBounce(markers[clickedLocation.markerIndex()]);
+    	var current_marker = markers[clickedLocation.markerIndex()];
+    	fillInfoWindowAndToggleMarker(current_marker);
+    	loadNYTimesArticle(current_marker.title)
+    	console.log(self.isYelpVisible);
+    	self.isYelpVisible(true);
+    	toggleBounce(markers[clickedLocation.markerIndex()]);
     }
 }
 
@@ -105,6 +111,7 @@ function initMap() {
       markers.push(marker);
       marker.addListener('click', function() {
       	fillInfoWindowAndToggleMarker(this);
+
       });
       mapBounds.extend(marker.position);
 	}
@@ -149,6 +156,46 @@ function closeInfoWindowAndClearBounce(infowindow) {
 		}
 	}
 	selectedMarker = null;
+}
+
+
+function loadNYTimesArticle(location) {
+	if (location)
+	{
+		var $nytHeaderElem = $('#nytimes-header');
+		var $nytElem = $('#nytimes-articles');
+		$nytHeaderElem.text('Retrieving information about: ' + location);
+		var nytimesSearch = 'http://api.nytimes.com/svc/search/v2/articlesearch.json?q=' + location +
+    	'&sort=newest&api-key=7749617247d34db7b99342ca8302b233';
+	    console.log(nytimesSearch);
+	    $.getJSON(nytimesSearch, function(data){
+	    	$nytHeaderElem.text('New York Times Articles About ' + location);
+
+	    	var articles = data.response.docs;
+	    	for(var i = 0; i < articles.length; i++) {
+	    		var article = articles[i];
+	    		$nytElem.append('<li class="article">' +
+	    			'<a href="' + article.web_url + '">' + article.headline.main+
+	    				'</a>' +
+	    			'<p>' + article.snippet + '</p>' +
+	    			'</li>');
+	    	}
+	    }).error(function(e) {
+	    	$nytHeaderElem.text('New York Times Articles Could Not Be Loaded.');
+	    });
+	}
+}
+
+function openNav() {
+    document.getElementById("SideMenu").style.width = "250px";
+    document.getElementById("map").style.height = "100%";
+    document.getElementById("map").style.top = "0%";
+}
+
+function closeNav() {
+    document.getElementById("SideMenu").style.width = "0";
+    document.getElementById("map").style.height = "92%";
+    document.getElementById("map").style.top = "8%";
 }
 
 

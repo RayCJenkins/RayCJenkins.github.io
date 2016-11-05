@@ -8,23 +8,34 @@
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-	<div class="container">
-	  <div class="options-box">
-	    <h1>Sugar House Neighborhood</h1>
-	    <div>
-	    	<label>Filter By:</label>
+	<span id="filter-menu"style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776; Filter Menu</span>
+
+  	<div id="SideMenu" class="options-box">
+  		<span id="filter-menu"style="font-size:30px;cursor:pointer" onclick="closeNav()">&#9776; Close</span>
+
+    	<h1>Sugar House Neighborhood</h1>
+    	<div>
+    		<label>Filter By:</label>
 			<select data-bind='value: currentFilter, options: availableCategories'></select>
 		</div>
-	    <div>
-	    	<ul data-bind='foreach: Locations'>
-	    		<li data-bind='visible: isVisible, text: title, click: $parent.clickMapMarker'></li>
-	    	</ul>
+    	<div>
+    		<ul data-bind='foreach: Locations'>
+    			<li data-bind='visible: isVisible, text: title, click: $parent.clickMapMarker'></li>
+    		</ul>
+    	</div>
+	    <div class="nytimes-container">
+	    	<h3 id="nytimes-header">New York Times Articles</h3>
+	    	<ul id="nytimes-articles" class="article-list"></ul>
+		</div>
+	    <div class='Yelp-review' data-bind='visible: isYelpVisible'>
+			<h2>Yelp Reviews</h2>
+	    	<p>Yelp Articles go here</p>
 	    </div>
-	  </div>
-	  <div id="map"></div>
 	</div>
+	<div id="map"></div>
     <script src="js/libs/knockout-3.4.0.js"></script>
     <script src="js/script.js"></script>
+    <script async src="js/libs/jquery.min.js"></script>
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCoVhIHT_lQ87X2rNNefXTCfgTSz9D92nQ&v=3&callback=initMap"></script>
 
 </body>
