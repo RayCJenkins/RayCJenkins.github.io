@@ -28,21 +28,26 @@ body {
     height: 100%;
     width: 0px;
     position: fixed;
-    z-index: 1;
+    z-index: 2;
     top: 0;
     left: 0;
     background-color: gray;
     overflow-x: hidden;
     transition: 0.5s;
-    padding-top: 60px;
+    padding-top: 10px;
 }
 
-#sidenav #closebtn {
-    position: absolute;
-    top: 0;
-    right: 20px;
-    font-size: 36px;
-    margin-left: 50px;
+#filter-menu-button {
+    font-size: 30px;
+    cursor: pointer;
+    position: fixed;
+    z-index: 1;
+}
+
+#close-menu-button {
+    font-size:30px;
+    cursor:pointer;
+    padding-left: 10px;
 }
 
 .nytimes-container {
@@ -65,8 +70,7 @@ body {
 
 #map {
     bottom:0px;
-    top: 8%;
-    height: 92%;
+    height: 100%;
     left: 0px;
     position: absolute;
     right: 0px;

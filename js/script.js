@@ -188,14 +188,14 @@ function loadNYTimesArticle(location) {
 
 function openNav() {
     document.getElementById("SideMenu").style.width = "250px";
-    document.getElementById("map").style.height = "100%";
-    document.getElementById("map").style.top = "0%";
+    //document.getElementById("map").style.height = "100%";
+    //document.getElementById("map").style.top = "0%";
 }
 
 function closeNav() {
     document.getElementById("SideMenu").style.width = "0";
-    document.getElementById("map").style.height = "92%";
-    document.getElementById("map").style.top = "8%";
+    //document.getElementById("map").style.height = "92%";
+    //document.getElementById("map").style.top = "8%";
 }
 
 
