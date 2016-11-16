@@ -57,7 +57,6 @@ var Location = function(data, index) {
 var ViewModel = function() {
 	var self = this;
 
-	// this.isYelpVisible = ko.observable(false);
 	this.isFilterMenuVisible = ko.observable(true);
 
 	this.Locations = ko.observableArray([]);
@@ -65,7 +64,9 @@ var ViewModel = function() {
 	interestingLocations.forEach(function(locationItem, index) {
 		self.Locations.push(new Location(locationItem, index));
 	});
+
 	this.availableCategories = ko.observableArray(LocationCategories)
+
 	this.currentFilter = ko.observable('All');
 	this.currentFilter.subscribe(function(newValue) {
 		closeInfoWindowAndClearBounce(infoWindow);
@@ -88,7 +89,6 @@ var ViewModel = function() {
     this.openSideMenu = function() {
     	self.isFilterMenuVisible(false);
     	document.getElementById("top-menu").style.height = "100%";
-
 	};
 
 	this.closeSideMenu = function() {
