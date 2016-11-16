@@ -166,7 +166,7 @@ function closeInfoWindowAndClearBounce(info_window) {
 function loadMarkerWithWikipediaLinks(marker, info_window) {
 	if (info_window.marker != marker) {
 		var $wikiElem = $('#wikipedia-header');
-		var wikipediaSearchURL = 'http://en.wikipedia.org/w/api.php?action=opensearch&search=' + marker.title + '&format=json&callback=wiliCallback';
+		var wikipediaSearchURL = 'https://en.wikipedia.org/w/api.php?action=opensearch&search=' + marker.title + '&format=json&callback=wiliCallback';
 
 	    var wikiRequestTimeout = setTimeout(function(){
 	    	$wikiElem.text("Request for Wikipedia Information failed!");
