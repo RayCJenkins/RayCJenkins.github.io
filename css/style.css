@@ -24,33 +24,35 @@ body {
     width: 100%;
 }
 
-#side-menu {
+#top-menu {
     height: 0;
-    width: 25%;
+    width: 250px;
     position: fixed;
     z-index: 2;
     top: 0;
     left: 0;
-    background-color: gray;
+    background:rgba(255,255,255,0.5);
     overflow-x: hidden;
     transition: 0.5s;
-    padding-top: 10px;
+    padding-left: 10px;
 }
 
 #filter-menu-button {
     color: black;
-    background-color: gray;
+    background:rgba(255,255,255,0.5);
     font-size: 30px;
     font-weight: bold;
     cursor: pointer;
+    transition: 0.75s;
     position: fixed;
     z-index: 1;
 }
 
 #close-menu-button {
+    color: black;
     font-size:30px;
     cursor:pointer;
-    padding-left: 10px;
+    font-weight: bold;
 }
 
 .nytimes-container {

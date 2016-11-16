@@ -8,9 +8,9 @@
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-	<span id="filter-menu-button" onclick="openNav()">&#9776; Filter Menu</span>
-	<div id="side-menu">
-  		<span id="close-menu-button" onclick="closeNav()">&#9776; Close</span>
+	<span id="filter-menu-button" data-bind="click: openSideMenu, visible: isFilterMenuVisible">&#9776; Filter Menu</span>
+	<div id="top-menu">
+  		<span id="close-menu-button" data-bind="click: closeSideMenu">&#9776; Close</span>
 
     	<h1>Sugar House Neighborhood</h1>
     	<div>
@@ -22,18 +22,13 @@
     			<li data-bind='visible: isVisible, text: title, click: $parent.clickMapMarker'></li>
     		</ul>
     	</div>
-	    <div class="nytimes-container">
-	    	<h3 id="nytimes-header">New York Times Articles</h3>
-	    	<ul id="nytimes-articles" class="article-list"></ul>
-		</div>
-	    <div class='Yelp-review' data-bind='visible: isYelpVisible'>
-			<h2>Yelp Reviews</h2>
-	    	<p>Yelp Articles go here</p>
-	    </div>
+      <div class="wikipedia-container">
+          <h3 id="wikipedia-header"></h3>
+      </div>
 	</div>
 	<div id="map"></div>
     <script src="js/libs/knockout-3.4.0.js"></script>
-    <script src="js/script.js"></script>
+    <script async src="js/script.js"></script>
     <script async src="js/libs/jquery.min.js"></script>
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCoVhIHT_lQ87X2rNNefXTCfgTSz9D92nQ&v=3&callback=initMap"></script>
 

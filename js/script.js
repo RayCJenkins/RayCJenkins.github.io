@@ -15,12 +15,12 @@ var interestingLocations = [
 		location: {lat: 40.721535, lng: -111.854360}
 	},
 	{
-		title: 'Westminster College',
+		title: 'Westminster College (Utah)',
 		category: 'Schools',
 		location: {lat: 40.731974, lng: -111.854746}
 	},
 	{
-		title: 'Highland High School',
+		title: 'Highland High School, Utah',
 		category: 'Schools',
 		location: {lat: 40.723519, lng: -111.843545}
 	},
@@ -35,14 +35,14 @@ var interestingLocations = [
 		location: {lat: 40.720543, lng: -111.853931}
 	},
 	{
-		title: 'Patagonia Outlet',
+		title: 'Whole Foods Market',
 		category: 'Stores',
-		location: {lat: 40.720917, lng: -111.858308}
+		location: {lat: 40.723638, lng: -111.858944}
 	},
 	{
 		title: 'Forest Dale Golf Course',
 		category: 'Golf Courses',
-		location: {lat: 40.718770, lng: -111.865046}
+		location: {lat: 40.718770, lng: -111.85656}
 	}
 ]
 
@@ -57,7 +57,8 @@ var Location = function(data, index) {
 var ViewModel = function() {
 	var self = this;
 
-	this.isYelpVisible = ko.observable(false);
+	// this.isYelpVisible = ko.observable(false);
+	this.isFilterMenuVisible = ko.observable(true);
 
 	this.Locations = ko.observableArray([]);
 
@@ -78,14 +79,26 @@ var ViewModel = function() {
 			}
 		};
     }, this);
+
     this.clickMapMarker = function(clickedLocation) {
     	var current_marker = markers[clickedLocation.markerIndex()];
     	fillInfoWindowAndToggleMarker(current_marker);
-    	loadNYTimesArticle(current_marker.title)
-    	console.log(self.isYelpVisible);
-    	self.isYelpVisible(true);
-    	toggleBounce(markers[clickedLocation.markerIndex()]);
-    }
+    };
+
+    this.openSideMenu = function() {
+    	self.isFilterMenuVisible(false);
+    	document.getElementById("top-menu").style.height = "100%";
+
+	};
+
+	this.closeSideMenu = function() {
+    	document.getElementById("top-menu").style.height = "0";
+    	setTimeout(self.showFilterMenu, 600);
+	};
+
+	this.showFilterMenu = function() {
+		self.isFilterMenuVisible(true);
+	};
 }
 
 ko.applyBindings(new ViewModel());
@@ -123,7 +136,6 @@ function fillInfoWindowAndToggleMarker(marker) {
     	toggleBounce(selectedMarker);
     }
     fillInfoWindow(marker, infoWindow);
-    toggleBounce(marker);
     selectedMarker = marker;
 }
 
@@ -136,67 +148,65 @@ function toggleBounce(marker) {
 }
 
 
-function fillInfoWindow(marker, infowindow) {
-	if (infowindow.marker != marker) {
-          infowindow.marker = marker;
-          infowindow.setContent('<div class="info-window">' + marker.title + '</div>');
-          infowindow.open(map, marker);
-          infowindow.addListener('closeclick', function() {
-            infowindow.marker = null;
-          });
-	}
+function fillInfoWindow(marker, info_window) {
+    loadMarkerWithWikipediaLinks(marker, info_window);
 }
 
-function closeInfoWindowAndClearBounce(infowindow) {
-	if (infowindow){
-		infowindow.close();
-		if (infowindow.marker){
-			infowindow.marker.setAnimation(null);
-			infowindow.marker = null;
+function closeInfoWindowAndClearBounce(info_window) {
+	if (info_window){
+		info_window.close();
+		if (info_window.marker){
+			info_window.marker.setAnimation(null);
+			info_window.marker = null;
 		}
 	}
 	selectedMarker = null;
 }
 
+function loadMarkerWithWikipediaLinks(marker, info_window) {
+	if (info_window.marker != marker) {
+		var $wikiElem = $('#wikipedia-header');
+		var wikipediaSearchURL = 'http://en.wikipedia.org/w/api.php?action=opensearch&search=' + marker.title + '&format=json&callback=wiliCallback';
 
-function loadNYTimesArticle(location) {
-	if (location)
-	{
-		var $nytHeaderElem = $('#nytimes-header');
-		var $nytElem = $('#nytimes-articles');
-		$nytHeaderElem.text('Retrieving information about: ' + location);
-		var nytimesSearch = 'http://api.nytimes.com/svc/search/v2/articlesearch.json?q=' + location +
-    	'&sort=newest&api-key=7749617247d34db7b99342ca8302b233';
-	    console.log(nytimesSearch);
-	    $.getJSON(nytimesSearch, function(data){
-	    	$nytHeaderElem.text('New York Times Articles About ' + location);
+	    var wikiRequestTimeout = setTimeout(function(){
+	    	$wikiElem.text("Request for Wikipedia Information failed!");
+	    }, 8000);
 
-	    	var articles = data.response.docs;
-	    	for(var i = 0; i < articles.length; i++) {
-	    		var article = articles[i];
-	    		$nytElem.append('<li class="article">' +
-	    			'<a href="' + article.web_url + '">' + article.headline.main+
-	    				'</a>' +
-	    			'<p>' + article.snippet + '</p>' +
-	    			'</li>');
+	    $.ajax({
+	    	url: wikipediaSearchURL,
+	    	dataType: "jsonp",
+	    	success: function(response) {
+	    		var markerContent;
+	    		var articleList = response[1];
+	    		if (articleList.length > 0)
+	    		{
+		    		var url = response[3];
+		    		var description = response[2]
+		    		markerContent = '<div class="info-window">' +
+						'<h5>' + marker.title + '</h5>' +
+						'<p>' + description + '</p>' +
+						'<div>Wikipedia page can be found <a href="' + url + '">here</a></div></div>';
+		    	}
+		    	else
+		    	{
+		    		markerContent = '<div class="info-window">' +
+						'<h5>' + marker.title + '</h5>' +
+						'<p>Wikipedia page not found</p>';
+		    	}
+ 	   			clearTimeout(wikiRequestTimeout);
+				info_window.marker = marker;
+				info_window.setContent(markerContent);
+				info_window.open(map, marker);
+				info_window.addListener('closeclick', function() {
+					info_window.marker = null;
+				});
+			    toggleBounce(marker);
+
 	    	}
-	    }).error(function(e) {
-	    	$nytHeaderElem.text('New York Times Articles Could Not Be Loaded.');
 	    });
 	}
 }
 
-function openNav() {
-    document.getElementById("side-menu").style.height = "100%";
-    //document.getElementById("map").style.height = "100%";
-    //document.getElementById("map").style.top = "0%";
-}
-
-function closeNav() {
-    document.getElementById("side-menu").style.height = "0";
-    //document.getElementById("map").style.height = "92%";
-    //document.getElementById("map").style.top = "8%";
-}
 
 
 
